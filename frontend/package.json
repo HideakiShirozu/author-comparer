@@ -1,0 +1,23 @@
+{
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"prepare": "panda codegen",
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview",
+		"check": "biome check --write"
+	},
+	"dependencies": {
+		"preact": "^10.13.1",
+		"preact-iso": "^2.8.1",
+		"preact-render-to-string": "^6.5.11"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4",
+		"@pandacss/dev": "^0.48.0",
+		"@preact/preset-vite": "^2.9.2",
+		"typescript": "^5.7.2",
+		"vite": "^4.5.5"
+	}
+}
