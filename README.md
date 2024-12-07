@@ -7,7 +7,7 @@ for the graduation thesis of my JHS
 
 ### 2. in backend
 1. run `cargo build --release`
-2. run `./target/release/author-comparisoner.exe`
+2. run `./target/release/author-comparer.exe`
 
 ### 3. in frontend
 1. run `bun install`
