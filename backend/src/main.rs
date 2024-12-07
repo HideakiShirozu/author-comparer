@@ -129,11 +129,11 @@ fn compare_features(features1: &TextFeatures, features2: &TextFeatures) -> Vec<D
     let mut results = Vec::new();
 
     // Compare word frequency distributions
-    let freq_diff =
+    let freq_sim =
         calculate_frequency_similarity(&features1.word_frequencies, &features2.word_frequencies);
     results.push(DetailedResult {
         aspect: "Vocabulary Usage".to_string(),
-        difference: freq_diff,
+        difference: 1.0 - freq_sim,
         explanation: "Similarity in word choice and frequency".to_string(),
     });
 
@@ -184,6 +184,10 @@ fn compare_features(features1: &TextFeatures, features2: &TextFeatures) -> Vec<D
     results
 }
 
+fn clamp(value: f64, min: f64, max: f64) -> f64 {
+    value.min(max).max(min)
+}
+
 #[post("/compare")]
 async fn compare_texts(body: web::Json<ComparisonQuery>) -> Result<web::Json<Analysis>> {
     let config = TokenizerConfig {
@@ -218,13 +222,11 @@ async fn compare_texts(body: web::Json<ComparisonQuery>) -> Result<web::Json<Ana
         .sum::<f64>()
         / detailed_analysis.len() as f64;
 
-    println!("Total Difference: {}", total_difference);
-
     // Using a threshold to determine if texts are by the same author
     // This threshold should be calibrated based on testing
     let threshold = 0.1;
     let same_author = total_difference < threshold;
-    let confidence = (total_difference - threshold).abs() / threshold;
+    let confidence = clamp((total_difference - threshold).abs() / threshold, 0.0, 0.9999);
 
     Ok(web::Json(Analysis {
         same_author,
@@ -235,6 +237,7 @@ async fn compare_texts(body: web::Json<ComparisonQuery>) -> Result<web::Json<Ana
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    println!("Listening on http://localhost:8000");
     HttpServer::new(|| {
         let cors = Cors::permissive(); // For development only
 

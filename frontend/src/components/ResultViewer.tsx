@@ -13,6 +13,8 @@ interface ResultViewerProps {
 }
 
 export default function ResultViewer({ result }: ResultViewerProps) {
+	console.log(result)
+
 	return (
 		<div
 			class={css({
@@ -49,16 +51,43 @@ export default function ResultViewer({ result }: ResultViewerProps) {
 						padding: '16px',
 						borderRadius: '8px',
 						textAlign: 'center',
+						position: 'relative',
+						display: 'flex',
+						flexDirection: 'column',
+						alignItems: 'center',
+						gap: '8px'
 					})}
 				>
+						<div
+							class={css({
+								height: '64px',
+								position: 'relative',
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'center',
+								zIndex: 1
+							})}
+						>
+							<p
+								class={css({
+									fontSize: '36px',
+									fontWeight: 'bold',
+									color: result.same_author ? '#2F855A' : '#C53030',
+									position: 'relative',
+									zIndex: 1
+								})}
+							>
+								{result.same_author ? 'Written' : 'Not written'}
+							</p>
+						</div>
 					<p
 						class={css({
-							fontSize: '18px',
-							fontWeight: 'bold',
-							color: result.same_author ? '#2F855A' : '#C53030',
+							fontSize: '16px',
+							color: '#4A5568',
+							marginTop: '4px'
 						})}
 					>
-						Same Author: {result.same_author ? 'Yes' : 'No'}
+						by the same author
 					</p>
 				</div>
 				<div
@@ -68,16 +97,43 @@ export default function ResultViewer({ result }: ResultViewerProps) {
 						padding: '16px',
 						borderRadius: '8px',
 						textAlign: 'center',
+						position: 'relative',
+						display: 'flex',
+						flexDirection: 'column',
+						alignItems: 'center',
+						gap: '8px'
 					})}
 				>
+						<div
+							class={css({
+								height: '64px',
+								position: 'relative',
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'center',
+								zIndex: 1
+							})}
+						>
+							<p
+								class={css({
+									fontSize: '36px',
+									fontWeight: 'bold',
+									color: '#2B6CB0',
+									position: 'relative',
+									zIndex: 1
+								})}
+							>
+								{(result.confidence * 100).toFixed(2)}%
+							</p>
+						</div>
 					<p
 						class={css({
-							fontSize: '18px',
-							fontWeight: 'bold',
-							color: '#2B6CB0',
+							fontSize: '16px',
+							color: '#4A5568',
+							marginTop: '4px'
 						})}
 					>
-						Confidence: {(result.confidence * 100).toFixed(2)}
+						Confidence
 					</p>
 				</div>
 			</div>
@@ -129,7 +185,7 @@ export default function ResultViewer({ result }: ResultViewerProps) {
 								marginBottom: '8px',
 							})}
 						>
-							Difference: {(detail.difference * 100).toFixed(2)}
+							Difference: {(detail.difference * 100).toFixed(2)}%
 						</p>
 						<p
 							class={css({

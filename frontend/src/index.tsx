@@ -27,7 +27,7 @@ function CompareField({
 				flexDirection: 'column',
 				gap: '8px',
 				sm: {
-					width: '45%',
+					width: '50%',
 				},
 				color: '#1a1a1a',
 			})}
@@ -44,21 +44,35 @@ function CompareField({
 			<textarea
 				class={css({
 					width: '100%',
-					height: '200px',
+					height: '300px',
 					padding: '12px',
 					borderRadius: '8px',
 					border: '1px solid #E2E8F0',
 					fontSize: '14px',
 					lineHeight: '1.5',
-					resize: 'vertical',
+					resize: 'none',
 					_focus: {
 						outline: 'none',
 						borderColor: '#4299E1',
-						boxShadow: '0 0 0 3px rgba(66, 153, 225, 0.2)',
+						boxShadow: '0 0 0 1px #4299E1',
+					},
+					'&::-webkit-scrollbar': {
+						width: '8px',
+					},
+					'&::-webkit-scrollbar-track': {
+						background: '#EDF2F7',
+						borderRadius: '4px',
+					},
+					'&::-webkit-scrollbar-thumb': {
+						background: '#CBD5E0',
+						borderRadius: '4px',
+						_hover: {
+							background: '#A0AEC0',
+						},
 					},
 				})}
 				onChange={(e) => callback((e.target as HTMLTextAreaElement).value)}
-				placeholder={`Enter ${title.toLowerCase()} text here...`}
+				placeholder={`Enter ${title.toLowerCase()} here...`}
 			/>
 		</div>
 	)
@@ -85,8 +99,9 @@ export function App() {
 			})
 			const data = await response.json()
 			setResult(data)
-		} catch (error) {
-			console.error('Error:', error)
+		} catch (e) {
+			console.error('Error:', e)
+			alert('An error occurred while comparing texts.\nPlease ensure the API server is running.')
 		} finally {
 			setLoading(false)
 		}
@@ -115,7 +130,7 @@ export function App() {
 						textAlign: 'center',
 					})}
 				>
-					Author Writing Style Analyzer
+					Author Comparer
 				</h1>
 				<div
 					class={css({
