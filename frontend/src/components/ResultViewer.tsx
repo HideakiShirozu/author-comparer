@@ -77,7 +77,7 @@ export default function ResultViewer({ result }: ResultViewerProps) {
 							color: '#2B6CB0',
 						})}
 					>
-						Confidence: {(result.confidence * 100).toFixed(2)}%
+						Confidence: {(result.confidence * 100).toFixed(2)}
 					</p>
 				</div>
 			</div>
@@ -129,7 +129,7 @@ export default function ResultViewer({ result }: ResultViewerProps) {
 								marginBottom: '8px',
 							})}
 						>
-							Difference: {(detail.difference * 100).toFixed(2)}%
+							Difference: {(detail.difference * 100).toFixed(2)}
 						</p>
 						<p
 							class={css({

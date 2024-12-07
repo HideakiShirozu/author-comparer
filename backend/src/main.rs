@@ -92,11 +92,10 @@ fn extract_features(text: &str, tokenizer: &Tokenizer) -> TextFeatures {
             .collect(),
         avg_word_length: total_length / total_tokens,
         particle_ratio: word_frequencies.get("助詞").unwrap_or(&0.0).clone() / total_tokens,
-        verb_ratio: (word_frequencies.get("動詞").unwrap_or(&0.0).clone() * 10.0) / total_tokens, // Cuz it's more important I think
-        adjective_ratio: (word_frequencies.get("形容詞").unwrap_or(&0.0).clone() * 5.0)
-            / total_tokens, // Cuz it's more important I think
+        verb_ratio: word_frequencies.get("動詞").unwrap_or(&0.0).clone() / total_tokens,
+        adjective_ratio: word_frequencies.get("形容詞").unwrap_or(&0.0).clone() / total_tokens,
         unique_words_ratio: word_frequencies.len() as f64 / total_tokens,
-        avg_sentence_length: total_tokens / (sentence_count * 50.0), // Cuz it raised too high difference
+        avg_sentence_length: total_tokens / (sentence_count * 50.0),
         punctuation_ratio: punctuation_count / total_tokens,
     }
 }
@@ -204,14 +203,28 @@ async fn compare_texts(body: web::Json<ComparisonQuery>) -> Result<web::Json<Ana
     let detailed_analysis = compare_features(&features1, &features2);
 
     // Calculate overall difference and determine if same author
-    let total_difference: f64 =
-        detailed_analysis.iter().map(|r| r.difference).sum::<f64>() / detailed_analysis.len() as f64;
+    let total_difference: f64 = detailed_analysis
+        .iter()
+        .map(|r| match r.aspect.as_str() {
+            "Average Word Length" => r.difference,
+            "Particle Usage" => r.difference,
+            "Verb Usage" => r.difference * 10.0, // Cuz it's more important I think
+            "Adjective Usage" => r.difference * 5.0,
+            "Vocabulary Richness" => r.difference,
+            "Sentence Length" => r.difference / 50.0, // Cuz it raised too high difference, less meaningful
+            "Punctuation Style" => r.difference,
+            _ => 0.0,
+        })
+        .sum::<f64>()
+        / detailed_analysis.len() as f64;
+
+    println!("Total Difference: {}", total_difference);
 
     // Using a threshold to determine if texts are by the same author
     // This threshold should be calibrated based on testing
-    let threshold = 0.25;
+    let threshold = 0.1;
     let same_author = total_difference < threshold;
-    let confidence = (total_difference - threshold).abs() / (threshold * 0.3);
+    let confidence = (total_difference - threshold).abs() / threshold;
 
     Ok(web::Json(Analysis {
         same_author,
