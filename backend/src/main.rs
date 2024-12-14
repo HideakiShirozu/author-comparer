@@ -128,6 +128,8 @@ fn calculate_frequency_similarity(
     let v1 = DVector::from_vec(vec1);
     let v2 = DVector::from_vec(vec2);
 
+    println!("v1: {:#?}, v2: {:#?}", v1.norm(), v2.norm());
+
     let cosine_similarity = (v1.dot(&v2)) / (v1.norm() * v2.norm());
     cosine_similarity
 }
@@ -140,7 +142,7 @@ fn compare_features(features1: &TextFeatures, features2: &TextFeatures) -> Vec<D
     results.push(DetailedResult {
         aspect: "Word Usage".to_string(),
         difference: 1.0 - freq_similarity,
-        explanation: "Similarity in word choice and frequency".to_string(),
+        explanation: "Difference in word choice and frequency".to_string(),
     });
 
     // Compare basic text statistics with tolerance for different text lengths
@@ -163,6 +165,8 @@ fn compare_features(features1: &TextFeatures, features2: &TextFeatures) -> Vec<D
         ("Adjective Usage", features1.adjective_ratio, features2.adjective_ratio),
         ("Punctuation", features1.punctuation_ratio, features2.punctuation_ratio),
     ];
+
+    println!("Style markers: {:#?}", style_markers);
 
     for (name, ratio1, ratio2) in style_markers {
         let ratio_diff = (ratio1 - ratio2).abs();
